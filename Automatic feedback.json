@@ -1,0 +1,347 @@
+{
+  "name": "Automatic feedback",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "feedback",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3ca0196c-0adb-4547-ae13-77e326c6da79",
+      "name": "Webhook",
+      "webhookId": "50d19e48-dff2-43a5-8096-5f650d210e5d"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a5a8cdc1-c75f-4c0b-abff-a5dcce2a9b6b",
+              "name": "name",
+              "value": "={{$json[\"name\"]}}",
+              "type": "string"
+            },
+            {
+              "id": "6a8d4df3-6e46-4759-8d72-37fff12ab6e4",
+              "name": "email",
+              "value": "={{$json[\"email\"]}}",
+              "type": "string"
+            },
+            {
+              "id": "e7bc71c2-dc6d-4680-8fcd-5f15135340b7",
+              "name": "rating",
+              "value": "={{$json[\"rating\"]}}",
+              "type": "string"
+            },
+            {
+              "id": "b960550f-e4f6-4c16-908f-a6c45d103caa",
+              "name": "feedback",
+              "value": "={{$json[\"feedback\"]}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "daa9b39c-10a2-473f-8cfd-364ed8eef050",
+      "name": "Extract Feedback"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "090329d3-e42c-4bbc-bb79-feb674bf5192",
+              "name": "isValidFeedback",
+              "value": "={{$json[\"feedback\"].length >= 10 && $json[\"rating\"] >= 1 && $json[\"rating\"] <= 5}}",
+              "type": "string"
+            },
+            {
+              "id": "3e78289c-8782-4eb0-9445-f6ecb94d021a",
+              "name": "feedbackLength",
+              "value": "={{$json[\"feedback\"].length}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        0
+      ],
+      "id": "650ebeb7-da9f-4991-8f4a-94e494ef37a0",
+      "name": "Validate Feedback"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "698cb177-b439-49e2-9ad4-47d2238ce3bc",
+              "leftValue": "={{$json[\"isValidFeedback\"]}}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        624,
+        0
+      ],
+      "id": "7cd15ef1-cc9d-4998-981c-29df845ac98a",
+      "name": "Feedback Valid?"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1ciNC9_yWDZfmlffN1B_YGTGSb6a0MfKW7_0eYhGL33s",
+          "mode": "list",
+          "cachedResultName": "Automatic feedback",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ciNC9_yWDZfmlffN1B_YGTGSb6a0MfKW7_0eYhGL33s/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Лист1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ciNC9_yWDZfmlffN1B_YGTGSb6a0MfKW7_0eYhGL33s/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": "{{$now}}",
+            "Email": "{{$json[\"email\"]}}",
+            "Name": "{{$json[\"name\"]}}",
+            "Rating": "{{$json[\"rating\"]}}",
+            "Feedback": "{{$json[\"feedback\"]}}",
+            "Status": "Saved"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Rating",
+              "displayName": "Rating",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Feedback",
+              "displayName": "Feedback",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        832,
+        -96
+      ],
+      "id": "80a51d3e-06a2-4ffc-8946-7cf750469b03",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Pd8TrTCMtTlWLJKY",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"success\",\n  \"message\": \"Thank you! Your feedback has been saved.\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1040,
+        -96
+      ],
+      "id": "ee47c116-8286-4884-a73b-bef50b88bca0",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"error\",\n  \"message\": \"Feedback must be at least 10 characters and rating between 1 and 5.\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        832,
+        96
+      ],
+      "id": "37a38668-5e7e-498c-b558-209ca37f7dd5",
+      "name": "Respond to Webhook1"
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "name": "Anna Nowak",
+          "email": "anna@example.com",
+          "rating": 5,
+          "feedback": "Very useful automation, easy to use."
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Extract Feedback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Feedback": {
+      "main": [
+        [
+          {
+            "node": "Validate Feedback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Feedback": {
+      "main": [
+        [
+          {
+            "node": "Feedback Valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Feedback Valid?": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "f445bc4f-ffa3-4000-9bcd-95271a498106",
+  "meta": {
+    "instanceId": "9663042cc422c05e85050fa05cf17a1ed1496492057a492b9364b6b3ab4ed2bd"
+  },
+  "id": "ETXJ33dTfYbAXVWQXx14F",
+  "tags": []
+}
