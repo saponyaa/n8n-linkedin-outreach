@@ -1,0 +1,362 @@
+{
+  "name": "System 1 – LinkedIn Outreach MVP",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "whatsapp-outreach",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "bdc21598-c536-4af6-afa8-09a9c4ae2516",
+      "name": "Webhook",
+      "webhookId": "3be4f882-ed63-4be4-891b-9275a0c3e6e5"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "755b61f6-d592-45fc-8bed-dd8e73befc73",
+              "name": "audience",
+              "value": "={{$json[\"message\"].replace(\"/outreach\", \"\").trim()}}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "47b012f0-0ce7-47a3-8ee9-e226484cc081",
+      "name": "Extract Audience"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6b05a0b2-a50f-46b9-a54d-17bed44a79ea",
+              "name": "ai_output",
+              "value": "=Lead search description: {{$json[\"audience\"]}}  1) Jan Kowalski, CEO, Creative Agency X 2) Anna Nowak, CEO, Marketing Agency Y 3) Piotr Zieliński, CEO, Design Studio Z  Personalized message: Cześć [Name], chciałbym Cię zaprosić do sieci na LinkedIn. Mam nadzieję, że nasze doświadczenia zawodowe mogą być inspirujące!",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        0
+      ],
+      "id": "26c9049d-f107-427b-be63-2913d215a43c",
+      "name": "Mock AI Output"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e5987356-e723-4bbe-90c1-c2b628329108",
+              "name": "confirmed ",
+              "value": "true",
+              "type": "string"
+            },
+            {
+              "id": "b09d3061-0000-4f5c-9cb9-3ed2c0014efd",
+              "name": "",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        624,
+        0
+      ],
+      "id": "e69630af-d674-43da-ac6b-0e13b9f7cc4d",
+      "name": "Simulate Confirmation"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "14b931ef-b14a-45bc-97cd-6580c858c8c9",
+              "leftValue": "{{$json[\"confirmed\"]}}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        832,
+        0
+      ],
+      "id": "3c4c1090-4864-4623-9ad4-7b63dab64df5",
+      "name": "User Confirmation"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "Lead(s) generated and saved successfully! ✅\nCheck your Google Sheet for details.\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1328,
+        -112
+      ],
+      "id": "c54963d1-f2a8-4037-a626-4c4171c77885",
+      "name": "WhatsApp Response"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "Operation cancelled ❌\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        944,
+        192
+      ],
+      "id": "ecc8fba0-7d39-49b0-909a-44b31eff9588",
+      "name": "WhatsApp Response1"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1t9jtwUhJENTum-RW9BrCbfZ6SZf5Kb3-TqSRPWnF7TM",
+          "mode": "list",
+          "cachedResultName": "LinkedIn Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1t9jtwUhJENTum-RW9BrCbfZ6SZf5Kb3-TqSRPWnF7TM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Лист1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1t9jtwUhJENTum-RW9BrCbfZ6SZf5Kb3-TqSRPWnF7TM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": "{{$now}}",
+            "Audience": "{{$json[\"audience\"]}}",
+            "Lead 1": "Jan Kowalski, CEO, Creative Agency X",
+            "Lead 2": "Anna Nowak, CEO, Marketing Agency Y",
+            "Lead 3": "Piotr Zieliński, CEO, Design Studio Z",
+            "Message": "\"Cześć [Name], chciałbym Cię zaprosić do sieci na LinkedIn...\""
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Audience",
+              "displayName": "Audience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead 1",
+              "displayName": "Lead 1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead 2",
+              "displayName": "Lead 2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead 3",
+              "displayName": "Lead 3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Message",
+              "displayName": "Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1184,
+        48
+      ],
+      "id": "7ab69d4f-6c04-4769-b783-3c73f1babee2",
+      "name": "Save Leads",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Pd8TrTCMtTlWLJKY",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "from": "+123456789",
+          "message": "/outreach CEO marketing agencies USA"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Extract Audience",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Audience": {
+      "main": [
+        [
+          {
+            "node": "Mock AI Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mock AI Output": {
+      "main": [
+        [
+          {
+            "node": "Simulate Confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simulate Confirmation": {
+      "main": [
+        [
+          {
+            "node": "User Confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "User Confirmation": {
+      "main": [
+        [
+          {
+            "node": "Save Leads",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WhatsApp Response1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Leads": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "df171d8d-b521-4342-abc8-5c64ccfe612b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9663042cc422c05e85050fa05cf17a1ed1496492057a492b9364b6b3ab4ed2bd"
+  },
+  "id": "M2J3CRyAoW8Cg3j5oV65v",
+  "tags": []
+}
