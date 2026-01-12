@@ -1,0 +1,396 @@
+{
+  "name": "Content Creation AI",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "create-post",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "1f73117f-c29b-45c2-bbf2-7c679cc1513f",
+      "name": "Webhook",
+      "webhookId": "2ef04cfe-1432-4166-92dc-423c99b0aee3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bda41f58-a6c3-4c16-a480-8082953c1745",
+              "name": "request",
+              "value": "={{$json[\"message\"].replace(\"/create_post\",\"\").trim()}}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "7abdb7d4-9cb1-45d2-bf56-a712408ebc1b",
+      "name": "Extract Request"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a7c167d7-2123-44f7-a2d4-5d22d58d9b33",
+              "name": "topic",
+              "value": "={{$json[\"request\"]}}",
+              "type": "string"
+            },
+            {
+              "id": "b8ef8804-1bff-421d-8a1b-cf68672fe457",
+              "name": "post_text",
+              "value": "AI is transforming marketing by enabling personalized customer experiences, improving campaign efficiency, and supporting data-driven decision making. Businesses that adopt AI gain a strong competitive advantage.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        0
+      ],
+      "id": "152f334c-187b-4fb9-b2a9-04cd7177025b",
+      "name": "Mock AI Text"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7d227f95-b1e9-4241-8f80-9e7c94b922b7",
+              "name": "image_url",
+              "value": "https://via.placeholder.com/1024x1024.png?text=AI+Marketing",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        624,
+        0
+      ],
+      "id": "d35cc7ef-ed59-4ba4-902f-1ca782fc4395",
+      "name": "Mock AI Image"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c5606e79-9d32-4da1-bee9-892ceab8e550",
+              "name": "confirmed",
+              "value": "true",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        832,
+        0
+      ],
+      "id": "d0aa90c0-1212-4f93-a120-9947ef8b7442",
+      "name": "Simulated  Confirmation"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a8373e72-94ae-4f5b-bc69-948c7dab2a8e",
+              "leftValue": "={{$json[\"confirmed\"]}}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1040,
+        0
+      ],
+      "id": "f7fa3d6a-a297-4f37-9bf7-6f852e953c3a",
+      "name": "User Confirmation"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1swqTs5KpPkcRaUtTjg16UaOQ08DSZ8zPRBxS-TfA0_w",
+          "mode": "list",
+          "cachedResultName": "content_posts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1swqTs5KpPkcRaUtTjg16UaOQ08DSZ8zPRBxS-TfA0_w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Лист1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1swqTs5KpPkcRaUtTjg16UaOQ08DSZ8zPRBxS-TfA0_w/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": "{{$now}}",
+            "Platform": "LinkedIn",
+            "Topic": "{{$json[\"topic\"]}}",
+            "Post Test": "{{$json[\"post_text\"]}}",
+            "Image URL": "{{$json[\"image_url\"]}}",
+            "Sources": "Mock AI content"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Platform",
+              "displayName": "Platform",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Topic",
+              "displayName": "Topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Post Test",
+              "displayName": "Post Test",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image URL",
+              "displayName": "Image URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Sources",
+              "displayName": "Sources",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1248,
+        -96
+      ],
+      "id": "0d5bdaea-e98d-41a7-9443-4e9eede1bbef",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Pd8TrTCMtTlWLJKY",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "Your post has been created and saved successfully!\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1456,
+        -96
+      ],
+      "id": "a47995b6-d6d3-468b-bf23-49554a68b125",
+      "name": "WhatsApp Response"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "Operation cancelled. No content was saved.\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1264,
+        48
+      ],
+      "id": "e362fc18-e378-40ab-a0a4-4754f2b5d700",
+      "name": "WhatsApp Response1"
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "from": "+123456789",
+          "message": "/create_post AI in marketing LinkedIn"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Extract Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Request": {
+      "main": [
+        [
+          {
+            "node": "Mock AI Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mock AI Text": {
+      "main": [
+        [
+          {
+            "node": "Mock AI Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mock AI Image": {
+      "main": [
+        [
+          {
+            "node": "Simulated  Confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simulated  Confirmation": {
+      "main": [
+        [
+          {
+            "node": "User Confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "User Confirmation": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WhatsApp Response1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "6d24b3c0-1fff-454d-bbe2-0923a3ddf3ce",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9663042cc422c05e85050fa05cf17a1ed1496492057a492b9364b6b3ab4ed2bd"
+  },
+  "id": "hNxhA_L1rawkIiezQR0x4",
+  "tags": []
+}
